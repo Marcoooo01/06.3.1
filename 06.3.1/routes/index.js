@@ -27,24 +27,30 @@ let executeQuery = function (res, query, next) {
         sql.close();
         return;
       }
-
-      sql.close();
-      return result.recordset;
-     
+      console.log('ciao');
+      renderPug(res, result.recordset);
+      return;
     });
+    
   });
+}
+
+
+function renderPug(res, recordset)
+{
+    res.render('index', {
+          title: 'Tutte le unità:',
+          re: recordset,
+    });
+    let data = JSON.stringify(recordset);
+    fs.writeFileSync('clash.json', data);
 }
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
   let sqlQuery = "select * from dbo.[cr-unit-attributes]";
-  let recordset = executeQuery(res, sqlQuery, next);
-   res.render('index', {
-          title: 'Tutti le unità:',
-          re: recordset,
-      }); //Il vettore con i dati è nel campo recordset (puoi loggare result per verificare)
-      let data = JSON.stringify(result.recordset);
-      fs.writeFileSync('clash.json', data);
+  executeQuery(res, sqlQuery, next);
+ 
 });
 
 module.exports = router;
