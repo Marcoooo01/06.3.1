@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= title
+  each r in re
+    h1 Unit: #{r.Unit}
+    img(src=`/images/${r.Unit}.png`)
+    a(href=`/dettagli/${r.Unit}`)
+    br
+    hr
