@@ -2,6 +2,16 @@ extends layout
 
 block content
   h1= title
+  ul
+  li
+    a.active(href='#home') Home
+  li
+    a(href='#news') News
+  li
+    a(href='#contact') Contact
+  li
+    a(href='#about') About
+
   br
   img(src=`/images/${re.Unit}.png`)
   h1 Unit: #{re.Unit}

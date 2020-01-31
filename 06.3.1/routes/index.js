@@ -27,7 +27,6 @@ let executeQuery = function (res, query, next) {
         sql.close();
         return;
       }
-      console.log('ciao');
       renderPug(res, result.recordset);
       return;
     });
@@ -50,7 +49,6 @@ function renderPug(res, recordset)
 router.get('/', function (req, res, next) {
   let sqlQuery = "select * from dbo.[cr-unit-attributes]";
   executeQuery(res, sqlQuery, next);
- 
 });
 
 module.exports = router;

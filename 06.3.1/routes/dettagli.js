@@ -38,10 +38,10 @@ let executeQuery = function (res, query, next) {
 function renderPug(res, recordset)
 {
     console.log(recordset);
-    let re = recordset;
+    let re = recordset[0];
     res.render('dettagli', {
           title: `Dettagli di ${re.Unit}:`,
-          re,
+          re: re,
     });
 }
 
