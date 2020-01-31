@@ -4,13 +4,10 @@ block content
   h1= title
   ul
     li
-      a.active(href='#home') Home
+      a.active(href='/') All Unit
     li
-      a(href='#news') News
-    li
-      a(href='#contact') Contact
-    li
-      a(href='#about') About
+      a(href='/addUnit') Add Unit
+  br
   each r in re
     h1 Unit: #{r.Unit}
     img(src=`/images/${r.Unit}.png`)
