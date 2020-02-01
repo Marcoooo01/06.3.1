@@ -1,5 +1,7 @@
+var createError = require('http-errors'); //Importo la libreria per la gestione degli errori
 var express = require('express');
 var router = express.Router();
+const sql = require('mssql');
 
 const config = {
   user: 'grossi.marco',  //Vostro user name
@@ -9,7 +11,7 @@ const config = {
 }
 
 //Function to connect to database and execute query
-let executeQuery = function (res, query, next) {
+let executeQuery = function (res, query, next, unit) {
   sql.connect(config, function (err) {
     if (err) { //Display error page
       console.log("Error while connecting database :- " + err);
@@ -24,25 +26,38 @@ let executeQuery = function (res, query, next) {
         sql.close();
         return;
       }
-      res.send(result.recordset); //Il vettore con i dati è nel campo recordset (puoi loggare result per verificare)
-      sql.close();
+      renderPug(res, unit);
+      return;
     });
 
   });
 }
 
-router.post('/', function (req, res, next) {
+function renderPug(res, unit)
+{
+    let re = unit
+    res.render('dettagli', {
+          title: `Unità aggiunta: ${re.Unit}`,
+          re: re,
+    });
+}
+
+router.post('/add', function (req, res, next) {
   // Add a new Unit  
   let unit = req.body;
   if (!unit) {  //Qui dovremmo testare tutti i campi della richiesta
     res.status(500).json({success: false, message:'Error while connecting database', error:err});
     return;
   }
-  let sqlInsert = `INSERT INTO dbo.[cr-unit-attributes] (Unit,Cost,Hit_Speed,Speed,Deploy_Time,Range,Target,Count,Transport,Type,Rarity) 
-                     VALUES ('${unit.Unit}','${unit.Cost}','${unit.Hit_Speed},'${unit.Speed}','${unit.Deploy_Time}','${unit.Range}','${unit.Target}','${unit.Count}','${unit.Transport},'${unit.Type}','${unit.Rarity}')`;
-  executeQuery(res, sqlInsert, next);
-  res.send({success:true, message: "unità inserita con successo", unit: unit})
+  let sqlInsert = `INSERT INTO dbo.[cr-unit-attributes]
+                     VALUES ('${unit.Unit}','${unit.Cost}','${unit.Hit_Speed}','${unit.Speed}','${unit.Deploy_Time}','${unit.Range}','${unit.Target}','${unit.Count}','${unit.Transport}','${unit.Type}','${unit.Rarity}')`;
+  executeQuery(res, sqlInsert, next, unit);
 });
 
+router.get('/', function(req, res, next){
+    res.render('addUnit', {
+        title: 'Aggiungi una unità.',
+    })
+})
 
 module.exports = router;
