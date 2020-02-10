@@ -10,7 +10,24 @@ const config = {
   database: 'grossi.marco', //(Nome del DB)
 }
 
-//Function to connect to database and execute query
+router.get('/', function(req, res, next){
+    res.render('addUnit', {
+        title: 'Aggiungi una unità.',
+    })
+})
+
+router.post('/add', function (req, res, next) {
+  // Add a new Unit  
+  let unit = req.body;
+  if (!unit) {  //Qui dovremmo testare tutti i campi della richiesta
+    res.status(500).json({success: false, message:'Error while connecting database', error:err});
+    return;
+  }
+  let sqlInsert = `INSERT INTO dbo.[cr-unit-attributes]
+                     VALUES ('${unit.Unit}','${unit.Cost}','${unit.Hit_Speed}','${unit.Speed}','${unit.Deploy_Time}','${unit.Range}','${unit.Target}','${unit.Count}','${unit.Transport}','${unit.Type}','${unit.Rarity}')`;
+  executeQuery(res, sqlInsert, next, unit);
+});
+
 let executeQuery = function (res, query, next, unit) {
   sql.connect(config, function (err) {
     if (err) { //Display error page
@@ -29,7 +46,6 @@ let executeQuery = function (res, query, next, unit) {
       renderPug(res, unit);
       return;
     });
-
   });
 }
 
@@ -41,23 +57,5 @@ function renderPug(res, unit)
           re: re,
     });
 }
-
-router.post('/add', function (req, res, next) {
-  // Add a new Unit  
-  let unit = req.body;
-  if (!unit) {  //Qui dovremmo testare tutti i campi della richiesta
-    res.status(500).json({success: false, message:'Error while connecting database', error:err});
-    return;
-  }
-  let sqlInsert = `INSERT INTO dbo.[cr-unit-attributes]
-                     VALUES ('${unit.Unit}','${unit.Cost}','${unit.Hit_Speed}','${unit.Speed}','${unit.Deploy_Time}','${unit.Range}','${unit.Target}','${unit.Count}','${unit.Transport}','${unit.Type}','${unit.Rarity}')`;
-  executeQuery(res, sqlInsert, next, unit);
-});
-
-router.get('/', function(req, res, next){
-    res.render('addUnit', {
-        title: 'Aggiungi una unità.',
-    })
-})
 
 module.exports = router;

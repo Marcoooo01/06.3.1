@@ -11,7 +11,12 @@ const config = {
   database: 'grossi.marco', //(Nome del DB)
 }
 
-//Function to connect to database and execute query
+router.get('/:unit', function (req, res, next) {
+  let sqlQuery = `select * from dbo.[cr-unit-attributes] where Unit = '${req.params.unit}'`;
+  executeQuery(res, sqlQuery, next);
+ 
+});
+
 let executeQuery = function (res, query, next) {
   sql.connect(config, function (err) {
     if (err) { //Display error page
@@ -30,10 +35,8 @@ let executeQuery = function (res, query, next) {
       renderPug(res, result.recordset);
       return;
     });
-    
   });
 }
-
 
 function renderPug(res, recordset)
 {
@@ -43,13 +46,5 @@ function renderPug(res, recordset)
           re: re,
     });
 }
-
-/* GET users listing. */
-router.get('/:unit', function (req, res, next) {
-  let sqlQuery = `select * from dbo.[cr-unit-attributes] where Unit = '${req.params.unit}'`;
-  executeQuery(res, sqlQuery, next);
- 
-});
-
 
 module.exports = router;
