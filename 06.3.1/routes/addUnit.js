@@ -19,7 +19,10 @@ router.get('/', function(req, res, next){
 router.post('/add', function (req, res, next) {
   // Add a new Unit  
   let unit = req.body;
-  if (!unit) {  //Qui dovremmo testare tutti i campi della richiesta
+  console.log('Ciao');
+  console.log(unit.Unit);
+  console.log('Ciao2');
+  if (!unit.Unit || !unit.Cost || !unit.Hit_Speed || !unit.Speed || !unit.Deploy_Time || !unit.Range || !unit.Target || !unit.Count  || !unit.Transport || !unit.Type || !unit.Rarity) {  //Qui dovremmo testare tutti i campi della richiesta
     res.status(500).json({success: false, message:'Error while connecting database', error:err});
     return;
   }
